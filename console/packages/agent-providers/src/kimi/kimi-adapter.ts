@@ -18,7 +18,7 @@ export const kimiAcp: AcpProviderHooks = {
   },
   launch: ({ binaryPath, env }) => ({ command: binaryPath, args: ['acp'], env }),
   loginCommand: KIMI_LOGIN,
-  inheritEnv: ['KIMI_API_KEY', 'MOONSHOT_API_KEY'],
+  inheritEnv: ['KIMI_API_KEY', 'MOONSHOT_API_KEY', 'KIMI_BASE_URL', 'MOONSHOT_BASE_URL'],
   checkSignIn: async ({ handshake, env }) => {
     if (env.KIMI_API_KEY?.trim() || env.MOONSHOT_API_KEY?.trim()) {
       return readiness('authenticated', 'Signs in with the Kimi API key it was given.');

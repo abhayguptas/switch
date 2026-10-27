@@ -64,6 +64,8 @@ it('has the expected provider metadata, binary and launch arguments', () => {
   expect(KIMI_LOGIN).toBe('kimi login');
   expect(kimiAcp.inheritEnv).toContain('KIMI_API_KEY');
   expect(kimiAcp.inheritEnv).toContain('MOONSHOT_API_KEY');
+  expect(kimiAcp.inheritEnv).toContain('KIMI_BASE_URL');
+  expect(kimiAcp.inheritEnv).toContain('MOONSHOT_BASE_URL');
 
   const launch = kimiAcp.launch({
     binaryPath: 'kimi',
