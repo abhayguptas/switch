@@ -98,15 +98,15 @@ describe('copilotAcp', () => {
       expect(handshake).not.toHaveBeenCalled();
     });
 
-    it('reports unauthenticated when handshake returns authMethods', async () => {
+    it('reports unauthenticated when no credentials exist in environment or config', async () => {
       const handshake = vi.fn().mockResolvedValue({
         protocolVersion: 1,
         agentCapabilities: {},
-        authMethods: [{ id: 'github_login', name: 'GitHub Login' }],
+        authMethods: [{ id: 'copilot-login', name: 'Copilot Login' }],
       } as AcpInitializeResult);
       const result = await copilotAcp.checkSignIn!({
         ...baseInput,
-        env: {},
+        env: { COPILOT_HOME: '/nonexistent-copilot-home' },
         handshake,
       });
       expect(result.status).toBe('unauthenticated');
@@ -114,11 +114,10 @@ describe('copilotAcp', () => {
       expect(handshake).toHaveBeenCalled();
     });
 
-    it('reports authenticated when handshake returns empty authMethods', async () => {
+    it('reports authenticated when copilot config has a logged-in user', async () => {
       const handshake = vi.fn().mockResolvedValue({
         protocolVersion: 1,
         agentCapabilities: {},
-        authMethods: [],
       } as AcpInitializeResult);
       const result = await copilotAcp.checkSignIn!({
         ...baseInput,
@@ -129,24 +128,11 @@ describe('copilotAcp', () => {
       expect(result.message).toContain('Signed in to GitHub Copilot CLI');
     });
 
-    it('reports authenticated when handshake returns no authMethods property', async () => {
-      const handshake = vi.fn().mockResolvedValue({
-        protocolVersion: 1,
-        agentCapabilities: {},
-      } as AcpInitializeResult);
-      const result = await copilotAcp.checkSignIn!({
-        ...baseInput,
-        env: {},
-        handshake,
-      });
-      expect(result.status).toBe('authenticated');
-    });
-
     it('reports unauthenticated when handshake throws an authentication error', async () => {
       const handshake = vi.fn().mockRejectedValue(new Error('Login required to access Copilot'));
       const result = await copilotAcp.checkSignIn!({
         ...baseInput,
-        env: {},
+        env: { COPILOT_HOME: '/nonexistent-copilot-home' },
         handshake,
       });
       expect(result.status).toBe('unauthenticated');
