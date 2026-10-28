@@ -1,4 +1,7 @@
+import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
 import type * as fs from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { FakeAppServer } from '../codex/fake-app-server';
 import type { ProviderRuntimeEvent } from '../events';
@@ -98,6 +101,29 @@ it('reports authenticated when given KIMI_API_KEY or MOONSHOT_API_KEY', async ()
   });
   expect(withMoonshotKey?.status).toBe('authenticated');
   expect(fakeHandshake).not.toHaveBeenCalled();
+});
+
+it('reports authenticated when credentials file contains access token in KIMI_HOME', async () => {
+  const tmp = await mkdtemp(join(tmpdir(), 'kimi-test-'));
+  try {
+    const credsDir = join(tmp, 'credentials');
+    await mkdir(credsDir, { recursive: true });
+    await writeFile(
+      join(credsDir, 'cred.json'),
+      JSON.stringify({ access_token: 'test-tok', refresh_token: 'test-ref' })
+    );
+    const fakeHandshake = vi.fn();
+    const result = await kimiAcp.checkSignIn?.({
+      binaryPath: 'kimi',
+      cwd: '/work',
+      env: { KIMI_HOME: tmp },
+      handshake: fakeHandshake,
+    });
+    expect(result?.status).toBe('authenticated');
+    expect(fakeHandshake).not.toHaveBeenCalled();
+  } finally {
+    await rm(tmp, { recursive: true, force: true });
+  }
 });
 
 it('reports authenticated when handshake returns no authMethods', async () => {
