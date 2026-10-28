@@ -10,6 +10,13 @@ describeConformance('copilot', {
       ? 'the GitHub Copilot CLI binary is not available'
       : null;
   },
+  skip: {
+    'user-input':
+      'GitHub Copilot CLI does not expose an interactive user-input tool over ACP (userInput is false in capabilities).',
+    subagent: 'GitHub Copilot CLI does not expose a subagent / task spawning tool over ACP.',
+    'mcp-registered':
+      'GitHub Copilot CLI in ACP mode does not expose dynamic session-level MCP servers passed via session/new.',
+  },
   mcpServers: { echo: echoMcpServerSpec() },
   ...(process.env.COPILOT_GITHUB_TOKEN
     ? { env: { COPILOT_GITHUB_TOKEN: process.env.COPILOT_GITHUB_TOKEN } }
