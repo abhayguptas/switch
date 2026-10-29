@@ -390,9 +390,13 @@ class TestOnlyTheOperator:
             "data.records:write",
             "data.recordComments:write",
         ]
-        assert apps[CANVA]["redirect_uris"] == [CANVA_CALLBACK]
-        assert apps[CANVA]["redirect_uri"] == CANVA_CALLBACK
-        assert apps[CANVA]["needs_public_url"] is True
+        canva_redirects = [
+            f"http://127.0.0.1:{port}/switch-services/callback"
+            for port in (39231, 39232, 39233, 39234, 39235)
+        ]
+        assert apps[CANVA]["redirect_uris"] == canva_redirects
+        assert apps[CANVA]["redirect_uri"] == canva_redirects[0]
+        assert apps[CANVA]["needs_public_url"] is False
         assert apps[CANVA]["scopes"] == [
             "design:meta:read",
             "design:content:read",

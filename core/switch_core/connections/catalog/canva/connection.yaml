@@ -14,9 +14,10 @@ auth:
     # CANVA_CLIENT_CONFIG_PATH or under Connector apps in Switch Console.
     registration: static
     client_settings: CANVA
-    # Redirects back to Core's callback: Canva requires HTTPS domains in
-    # production, and Core forwards the exchange to Switch Console.
-    redirect: [core]
+    # Canva connects through Switch Console in loopback mode on one of the
+    # fixed Console ports registered in the Canva Developer Portal.
+    redirect: [loopback]
+    loopback_ports: [39231, 39232, 39233, 39234, 39235]
     # Canva validates the client credentials on exchange and compares redirect
     # URIs with an actual authorization code.
     unchecked: >-

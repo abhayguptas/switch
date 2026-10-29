@@ -612,11 +612,10 @@ documentation:
   `https://api.canva.com/connect/v1/mcp` as the `canva` MCP server.
 - **Static OAuth client per server.** Each server's operator registers a Canva
   app in the Canva Developer Portal, enables Canva MCP under "Outside Canva",
-  configures its redirect URL to Core's callback
-  (`<GATEWAY_PUBLIC_URL>/gateway/service-connections/canva/flows/callback`), and
-  saves the client credentials under Connector apps in Switch Console or names
-  its settings file in `CANVA_CLIENT_CONFIG_PATH`. Canva requires HTTPS domains
-  for production integrations.
+  registers Switch Console's loopback callback ports
+  (`http://127.0.0.1:39231/switch-services/callback`), and saves the client
+  credentials under Connector apps in Switch Console or names its settings file
+  in `CANVA_CLIENT_CONFIG_PATH`.
 - **Discovery.** Authorization and token endpoints are discovered from the MCP
   server's RFC 9728 protected resource metadata:
   `https://www.canva.com/api/oauth/authorize` and

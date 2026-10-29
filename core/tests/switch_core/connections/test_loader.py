@@ -236,10 +236,10 @@ def test_the_shipped_canva_entry_signs_in_as_the_docs_found_it_must():
     assert (definition.adapter, oauth.registration, oauth.redirect) == (
         "oauth",
         "static",
-        ["core"],
+        ["loopback"],
     )
     assert oauth.client_settings == "CANVA"
-    assert oauth.loopback_ports is None
+    assert oauth.loopback_ports == [39231, 39232, 39233, 39234, 39235]
     assert oauth.revocation_url == "https://api.canva.com/rest/v1/oauth/revoke"
     assert oauth.revocation_discovered is False
     assert oauth.unchecked is not None and "redirect URL" in oauth.unchecked
